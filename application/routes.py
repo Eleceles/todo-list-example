@@ -1,5 +1,13 @@
 from application import app, db
 from application.models import Tasks
+from flask import render_template
+
+@app.route('/')
+@app.route('/home')
+def home():
+    all_tasks = Tasks.query.all()
+    return render_template('index.html', title="Home", all_tasks=all_tasks)
+    
 
 @app.route('/create/task')
 def add():
@@ -11,9 +19,7 @@ def add():
 @app.route('/read/allTasks')
 def read_tasks():
     all_tasks = Tasks.query.all()
-
     tasks_dict = {"tasks": []}
-
     for task in all_tasks:
         tasks_dict["tasks"].append(
             {
@@ -31,24 +37,23 @@ def update_task(id, new_description):
     db.session.commit()
     return f"Task {id} update to {new_description}"
 
-# @app.route('/add')
-# def add():
-#     new_game = Games(name="New Game")
-#     db.session.add(new_game)
-#     db.session.commit()
-#     return "Added new game to database"
+@app.route('/delete/task/<int:id>')
+def delete_task(id):
+    task = Tasks.query.get(id)
+    db.session.delete(task)
+    db.session.commit()
+    return f"Task {id} deleted"
 
-# @app.route('/read')
-# def read():
-#     all_games = Games.query.all()
-#     games_string = ""
-#     for game in all_games:
-#         games_string += "<br>"+ game.name
-#     return games_string
+@app.route('/complete/task/<int:id>')
+def complete_task(id, new_description):
+    task = Tasks.query.get(id)
+    task.completed = True
+    db.session.commit()
+    return f"Task {id} has been completed"
 
-# @app.route('/update/<name>')
-# def update(name):
-#     first_game = Games.query.first()
-#     first_game.name = name
-#     db.session.commit()
-#     return first_game.name
+@app.route('/incomplete/task/<int:id>')
+def incomplete_task(id, new_description):
+    task = Tasks.query.get(id)
+    task.completed = False 
+    db.session.commit()
+    return f"Task {id} has been set to incompleted"
