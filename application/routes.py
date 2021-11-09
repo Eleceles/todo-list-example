@@ -1,6 +1,7 @@
 from application import app, db
 from application.models import Tasks
-from flask import render_template
+from application.forms import TaskForm
+from flask import render_template, request, redirect, url_for
 
 @app.route('/')
 @app.route('/home')
@@ -8,13 +9,17 @@ def home():
     all_tasks = Tasks.query.all()
     return render_template('index.html', title="Home", all_tasks=all_tasks)
     
+@app.route('/create/task', methods=['GET', 'POST'])
+def create_task():
+    form = TaskForm()
 
-@app.route('/create/task')
-def add():
-    new_task = Tasks(description="New Task")
-    db.session.add(new_task)
-    db.session.commit()
-    return f"Task with id {new_task.id} added to database"
+    if request.method == "POST": 
+       new_task = Tasks(description=form.description.data)
+       db.session.add(new_task)
+       db.session.commit()
+       return redirect(url_for('home'))
+
+    return render_template("create_task.html", title="Add a new Task", form=form)
 
 @app.route('/read/allTasks')
 def read_tasks():
@@ -45,14 +50,14 @@ def delete_task(id):
     return f"Task {id} deleted"
 
 @app.route('/complete/task/<int:id>')
-def complete_task(id, new_description):
+def complete_task(id):
     task = Tasks.query.get(id)
     task.completed = True
     db.session.commit()
     return f"Task {id} has been completed"
 
 @app.route('/incomplete/task/<int:id>')
-def incomplete_task(id, new_description):
+def incomplete_task(id):
     task = Tasks.query.get(id)
     task.completed = False 
     db.session.commit()
