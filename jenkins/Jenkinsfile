@@ -1,6 +1,5 @@
 pipeline {
     agent any
-
     environment {
         CREATE_SCHEMA = "true"
         RUN_APP = "false"
@@ -23,7 +22,6 @@ pipeline {
                     if (env.CREATE_SCHEMA == "true") {
                        sh "bash jenkins/create_schema.sh"
                     }
-
                 }
             }
         }
@@ -31,12 +29,12 @@ pipeline {
             steps {
                 script{
                     if (env.RUN_APP == 'true') {
-                       sh "bash jenkins/run_app.py"
+                        sh "bash jenkins/run_app.py"
                     }
                 }    
             }
-        }
-    }
+         }
+     } 
      post { 
         always{
             junit 'junit_report.xml'
