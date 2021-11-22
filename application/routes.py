@@ -1,7 +1,6 @@
 from application import app, db
 from application.models import Tasks
-from application.forms import TaskForm
-from flask import render_template, request, redirect, url_for
+
 
 @app.route('/')
 @app.route('/home')
@@ -53,20 +52,3 @@ def delete_task(id):
     task = Tasks.query.get(id)
     db.session.delete(task)
     db.session.commit()
-    return redirect(url_for('home'))
-
-@app.route('/complete/task/<int:id>')
-def complete_task(id):
-    task = Tasks.query.get(id)
-    task.completed = True
-    db.session.commit()
-    return redirect(url_for('home'))
-
-
-@app.route('/incomplete/task/<int:id>')
-def incomplete_task(id):
-    task = Tasks.query.get(id)
-    task.completed = False 
-    db.session.commit()
-    return redirect(url_for('home'))
-
