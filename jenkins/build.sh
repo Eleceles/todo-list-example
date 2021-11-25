@@ -3,4 +3,4 @@
 echo "Build stage"
 
 # build images
-dcker-compose build
+docker-compose build
