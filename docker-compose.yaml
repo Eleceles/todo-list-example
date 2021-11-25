@@ -2,14 +2,14 @@ version: "3.8"
 services:
   frontend:
     build: ./frontend
-    image: eleana/todo-app-frontend:latest
+    image: eleceles/todo-app-frontend:latest
     container_name: todo-app-frontend
     ports:
     - target: 5000
       published: 80
   backend:
     build: ./backend
-    image: eleana/todo-app-backend:latest
+    image: eleceles/todo-app-backend:latest
     container_name: todo-app-backend
     environment:
       DATABASE_URI:
