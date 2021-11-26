@@ -1,13 +1,4 @@
-from application import app
-from application.forms import TaskForm
-from flask import render_template, request, redirect, url_for, jsonify
-import requests
 
-@app.route('/')
-@app.route('/home')
-def home():
-    all_tasks = requests.get("http://todo-app-backend:5000/read/allTasks").json()
-    return render_template('index.html', title="Home", all_tasks=all_tasks)
     
 from application import app
 from application.forms import TaskForm
